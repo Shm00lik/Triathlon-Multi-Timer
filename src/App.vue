@@ -1,13 +1,13 @@
 <template>
-  <v-app>
-    <v-main>
-      <HelloWorld />
-    </v-main>
-
-    <AppFooter />
-  </v-app>
+    <v-app>
+        <v-main>
+            <VContainer>
+                <stopwatch />
+            </VContainer>
+        </v-main>
+    </v-app>
 </template>
 
-<script setup>
-  //
+<script>
+export default {};
 </script>
