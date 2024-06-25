@@ -1,57 +1,64 @@
 <template>
-    <v-card width="270" class="mx-auto text-center" rounded="xl">
-        <v-card-title class="d-flex justify-space-between">
-            <div v-if="name">{{ track }} - {{ name }}</div>
+    <v-expand-transition>
+        <v-card
+            v-show="showWatch"
+            width="270"
+            class="mx-auto text-center"
+            rounded="xl"
+        >
+            <v-card-title class="d-flex justify-space-between">
+                <div v-if="name">{{ track }} - {{ name }}</div>
 
-            <div v-else>Track {{ track }}</div>
+                <div v-else>Track {{ track }}</div>
 
-            <v-icon @click="openSettingsDialog = true" size="small">
-                mdi-cog
-            </v-icon>
-        </v-card-title>
+                <v-icon @click="openSettingsDialog = true" size="small">
+                    mdi-cog
+                </v-icon>
+            </v-card-title>
 
-        <v-card-text>
-            <div v-if="isRunning">
-                <v-btn
-                    @click="toggleTimer"
-                    color="red"
-                    variant="outlined"
-                    block
+            <v-card-text>
+                <div v-if="isRunning">
+                    <v-btn
+                        @click="toggleTimer"
+                        color="red"
+                        variant="outlined"
+                        block
+                    >
+                        STOP
+                    </v-btn>
+
+                    <br />
+
+                    <v-btn
+                        @click="saveLap"
+                        color="primary"
+                        block
+                        variant="outlined"
+                    >
+                        Lap
+                    </v-btn>
+
+                    <br />
+                </div>
+
+                <h1 class="text--green">
+                    {{ stringifyTime(elapsedTime) }}
+                </h1>
+
+                <v-data-table
+                    :items="getLapsData()"
+                    density="compact"
+                    no-data-text="No laps recorded"
+                    disable-sort
+                    hide-default-footer
+                    hide-default-header
+                    :items-per-page="-1"
+                    hover
                 >
-                    STOP
-                </v-btn>
-
-                <br />
-
-                <v-btn
-                    @click="saveLap"
-                    color="primary"
-                    block
-                    variant="outlined"
-                >
-                    Lap
-                </v-btn>
-
-                <br />
-            </div>
-
-            <h1 class="text--green">
-                {{ stringifyTime(elapsedTime) }}
-            </h1>
-
-            <v-data-table
-                :items="getLapsData()"
-                density="compact"
-                no-data-text="No laps recorded"
-                disable-sort
-                hide-default-footer
-                hide-default-header
-                :items-per-page="-1"
-                hover
-            >
-            </v-data-table>
-        </v-card-text>
-    </v-card>
+                </v-data-table>
+            </v-card-text>
+        </v-card>
+    </v-expand-transition>
 
     <v-dialog
         v-model="openSettingsDialog"
@@ -114,6 +121,7 @@ export default {
 
     data() {
         return {
+            showWatch: false,
             isRunning: this.forceRun,
             openSettingsDialog: false,
             track: this.initialTrack,
@@ -195,6 +203,12 @@ export default {
                 this.$emit("stop");
             }
         },
+    },
+
+    created: function () {
+        setTimeout(() => {
+            this.showWatch = true;
+        }, 200 * this.track);
     },
 };
 </script>
