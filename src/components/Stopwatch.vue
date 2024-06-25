@@ -1,5 +1,5 @@
 <template>
-    <v-card width="270" class="mx-auto text-center">
+    <v-card width="270" class="mx-auto text-center" rounded="xl">
         <v-card-title class="d-flex justify-space-between">
             <div v-if="name">{{ track }} - {{ name }}</div>
 
@@ -14,18 +14,18 @@
             <div v-if="isRunning">
                 <v-btn
                     @click="toggleTimer"
-                    :color="getButtonColor('start')"
+                    color="red"
                     variant="outlined"
                     block
                 >
-                    {{ isRunning ? "Stop" : "Start" }}
+                    STOP
                 </v-btn>
 
                 <br />
 
                 <v-btn
                     @click="saveLap"
-                    :color="getButtonColor('lap')"
+                    color="primary"
                     block
                     variant="outlined"
                 >
@@ -35,7 +35,7 @@
                 <br />
             </div>
 
-            <h1>
+            <h1 class="text--green">
                 {{ stringifyTime(elapsedTime) }}
             </h1>
 
@@ -149,15 +149,6 @@ export default {
             return `${this.pad(minutes)}:${this.pad(seconds)}:${this.pad(
                 milliseconds
             )}`;
-        },
-
-        getButtonColor: function (button) {
-            switch (button) {
-                case "start":
-                    return this.isRunning ? "red" : "green";
-                case "lap":
-                    return "primary";
-            }
         },
 
         saveLap: function () {
