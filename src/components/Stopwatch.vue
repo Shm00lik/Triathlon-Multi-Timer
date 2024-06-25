@@ -114,7 +114,7 @@ export default {
 
     data() {
         return {
-            isRunning: false,
+            isRunning: this.forceRun,
             openSettingsDialog: false,
             track: this.initialTrack,
             name: "יואב",

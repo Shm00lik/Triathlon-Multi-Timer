@@ -70,7 +70,6 @@ export default {
 
             this.intervalId = setInterval(() => {
                 this.time = Date.now() - this.startTime;
-                console.log(this.time);
             }, DT * 1000);
         },
 
