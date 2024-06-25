@@ -110,6 +110,8 @@ export default {
         },
     },
 
+    emits: ["stop"],
+
     data() {
         return {
             isRunning: false,
@@ -194,6 +196,12 @@ export default {
         time: function () {
             if (this.isRunning) {
                 this.elapsedTime = this.time;
+            }
+        },
+
+        isRunning: function () {
+            if (!this.isRunning) {
+                this.$emit("stop");
             }
         },
     },

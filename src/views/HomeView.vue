@@ -30,6 +30,7 @@
                     :initial-track="track"
                     :distance="distance"
                     :time="time"
+                    @stop="stoppedWatches.push(track)"
                 />
             </v-col>
         </v-row>
@@ -57,11 +58,14 @@ export default {
             numberOfTracks: 6,
             distance: 25,
             possibleDistances: [25, 50],
+            stoppedWatches: [],
         };
     },
 
     methods: {
         startTimer: function () {
+            this.stoppedWatches = [];
+
             this.startTime = Date.now();
 
             this.intervalId = setInterval(() => {
@@ -96,6 +100,16 @@ export default {
             } else {
                 this.stopTimer();
             }
+        },
+
+        stoppedWatches: {
+            handler: function (newVal) {
+                if (newVal.length >= this.numberOfTracks) {
+                    this.forceRun = false;
+                }
+            },
+
+            deep: true,
         },
     },
 };
