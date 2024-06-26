@@ -7,19 +7,21 @@
         {{ forceRun ? "Stop" : "Start" }}
     </v-btn>
 
-    <v-pagination :length="8" :total-visible="8" v-model="numberOfTracks" />
+    <div v-if="!forceRun">
+        <v-pagination :length="8" :total-visible="8" v-model="numberOfTracks" />
 
-    <div class="d-flex justify-center">
-        <v-chip
-            v-for="(d, idx) in possibleDistances"
-            :key="idx"
-            :color="d == distance ? 'primary' : ''"
-            @click="setDistance(d)"
-            variant="flat"
-            class="mx-4"
-        >
-            {{ d }} METERS
-        </v-chip>
+        <div class="d-flex justify-center">
+            <v-chip
+                v-for="(d, idx) in possibleDistances"
+                :key="idx"
+                :color="d == distance ? 'primary' : ''"
+                @click="setDistance(d)"
+                variant="flat"
+                class="mx-4"
+            >
+                {{ d }} METERS
+            </v-chip>
+        </div>
     </div>
 
     <v-container>

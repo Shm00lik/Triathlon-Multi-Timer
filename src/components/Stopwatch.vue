@@ -46,7 +46,7 @@
                 </h1>
 
                 <v-data-table
-                    :items="getLapsData()"
+                    :items="expandLapsTable ? getLapsData() : getLastLapsData()"
                     density="compact"
                     no-data-text="No laps recorded"
                     disable-sort
@@ -54,8 +54,18 @@
                     hide-default-header
                     :items-per-page="-1"
                     hover
+                />
+
+                <br />
+
+                <v-btn
+                    @click="expandLapsTable = !expandLapsTable"
+                    color="primary"
+                    block
+                    variant="outlined"
                 >
-                </v-data-table>
+                    {{ expandLapsTable ? "Hide" : "Show" }}
+                </v-btn>
             </v-card-text>
         </v-card>
     </v-expand-transition>
@@ -65,6 +75,7 @@
         width="auto"
         class="mx-auto text-center"
         :opacity="0.254"
+        transition="dialog-bottom-transition"
     >
         <v-card>
             <v-card-title>Settings</v-card-title>
@@ -128,11 +139,13 @@ export default {
             name: "יואב",
             elapsedTime: 0,
             laps: [],
+            lastLaps: [],
             lapsTableHeaders: [
                 { title: "", key: "distance", align: "center" },
                 { title: "", key: "totalTime", align: "center" },
                 { title: "", key: "deltaTime", align: "center" },
             ],
+            expandLapsTable: false,
         };
     },
 
@@ -180,6 +193,10 @@ export default {
                     totalTime: this.stringifyTime(lap.totalTime),
                 };
             });
+        },
+
+        getLastLapsData: function (size = 3) {
+            return this.getLapsData().slice(-size);
         },
     },
 
