@@ -6,7 +6,7 @@
             class="mx-auto text-center"
             rounded="xl"
         >
-            <v-card-title class="d-flex justify-space-between">
+            <v-card-title class="d-flex justify-space-between" dir="rtl">
                 <div v-if="name">{{ track }} - {{ name }}</div>
 
                 <div v-else>Track {{ track }}</div>
@@ -64,7 +64,7 @@
                     block
                     variant="outlined"
                 >
-                    {{ expandLapsTable ? "Hide" : "Show" }}
+                    {{ expandLapsTable ? "Hide" : "Show All" }}
                 </v-btn>
             </v-card-text>
         </v-card>
@@ -82,9 +82,11 @@
             <v-card-text>
                 <v-pagination :length="8" :total-visible="8" v-model="track" />
 
-                <v-text-field
-                    clearable
+                <br />
+
+                <v-autocomplete
                     v-model="name"
+                    :items="possibleNames"
                     label="Name"
                     variant="outlined"
                 />
@@ -94,6 +96,8 @@
 </template>
 
 <script>
+import { db } from "@/App.vue";
+
 class Lap {
     constructor(distance, totalTime, deltaTime) {
         this.distance = distance;
@@ -126,6 +130,16 @@ export default {
             type: Number,
             default: 25,
         },
+
+        possibleNames: {
+            type: Array,
+            default: () => [],
+        },
+
+        saveResults: {
+            type: Boolean,
+            default: false,
+        },
     },
 
     emits: ["stop"],
@@ -136,10 +150,9 @@ export default {
             isRunning: this.forceRun,
             openSettingsDialog: false,
             track: this.initialTrack,
-            name: "יואב",
+            name: null,
             elapsedTime: 0,
             laps: [],
-            lastLaps: [],
             lapsTableHeaders: [
                 { title: "", key: "distance", align: "center" },
                 { title: "", key: "totalTime", align: "center" },
@@ -220,12 +233,32 @@ export default {
                 this.$emit("stop");
             }
         },
+
+        saveResults: function () {
+            console.log(this.saveResults, this.name);
+
+            if (this.saveResults && this.name) {
+                db.collection("data").add({
+                    track: this.track,
+                    username: this.name,
+                    totalTime: this.elapsedTime,
+                    date: new Date(),
+                    laps: this.laps.map((lap) => {
+                        return {
+                            distance: lap.distance,
+                            deltaTime: lap.deltaTime,
+                            totalTime: lap.totalTime,
+                        };
+                    }),
+                });
+            }
+        },
     },
 
     created: function () {
         setTimeout(() => {
             this.showWatch = true;
-        }, 200 * this.track);
+        }, 200);
     },
 };
 </script>

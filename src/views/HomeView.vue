@@ -7,21 +7,26 @@
         {{ forceRun ? "Stop" : "Start" }}
     </v-btn>
 
-    <div v-if="!forceRun">
+    <div v-if="!forceRun" style="text-align: center">
         <v-pagination :length="8" :total-visible="8" v-model="numberOfTracks" />
 
-        <div class="d-flex justify-center">
-            <v-chip
-                v-for="(d, idx) in possibleDistances"
-                :key="idx"
-                :color="d == distance ? 'primary' : ''"
-                @click="setDistance(d)"
-                variant="flat"
-                class="mx-4"
-            >
-                {{ d }} METERS
-            </v-chip>
-        </div>
+        <v-chip
+            v-for="(d, idx) in possibleDistances"
+            :key="idx"
+            :color="d == distance ? 'primary' : ''"
+            @click="setDistance(d)"
+            variant="flat"
+            class="mx-4"
+        >
+            {{ d }} METERS
+        </v-chip>
+
+        <br />
+        <br />
+
+        <v-btn variant="outlined" color="warning" @click="saveResults = true">
+            Save Results
+        </v-btn>
     </div>
 
     <v-container>
@@ -32,6 +37,8 @@
                     :initial-track="track"
                     :distance="distance"
                     :time="time"
+                    :possible-names="possibleNames"
+                    :save-results="saveResults"
                     @stop="stoppedWatches.push(track)"
                 />
             </v-col>
@@ -41,6 +48,7 @@
 
 <script>
 import Stopwatch from "../components/Stopwatch.vue";
+import { db } from "@/App.vue";
 
 const DT = 0.01;
 
@@ -60,7 +68,9 @@ export default {
             numberOfTracks: 6,
             distance: 25,
             possibleDistances: [25, 50],
+            possibleNames: [],
             stoppedWatches: [],
+            saveResults: false,
         };
     },
 
@@ -77,16 +87,6 @@ export default {
 
         stopTimer: function () {
             clearInterval(this.intervalId);
-        },
-
-        getTicks: function () {
-            let ticks = [];
-
-            for (let i = 0; i < this.numberOfDistances; i++) {
-                ticks.push(i * this.distanceStep);
-            }
-
-            return ticks;
         },
 
         setDistance: function (distance) {
@@ -112,6 +112,12 @@ export default {
 
             deep: true,
         },
+    },
+
+    created: async function () {
+        this.possibleNames = (await db.collection("users").get()).map(
+            (doc) => doc.username
+        );
     },
 };
 </script>
