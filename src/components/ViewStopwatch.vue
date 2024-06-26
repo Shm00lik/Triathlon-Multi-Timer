@@ -7,7 +7,7 @@
             rounded="xl"
         >
             <v-card-title class="d-flex justify-space-between" dir="rtl">
-                <div>{{ data.track }} - {{ data.username }}</div>
+                <div>מסלול {{ data.track }}</div>
 
                 <div>
                     {{ stringifyDate(new Date(data.date.seconds * 1000)) }}
