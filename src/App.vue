@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-main>
-            <home-view />
+            <router-view />
 
             <v-footer app class="d-flex justify-center">
                 <div class="text-center" width="auto">
@@ -15,14 +15,8 @@
 </template>
 
 <script>
-import HomeView from "./views/HomeView.vue";
-
 export default {
     name: "App",
-
-    components: {
-        HomeView,
-    },
 
     data() {
         return {
