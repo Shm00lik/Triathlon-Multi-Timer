@@ -6,12 +6,14 @@
             class="mx-auto text-center"
             rounded="xl"
         >
-            <v-card-title class="d-flex justify-space-between" dir="rtl">
-                <div>מסלול {{ data.track }}</div>
+            <v-card-title class="d-flex flex-column align-center">
+                Track {{ data.track }}
 
-                <div>
-                    {{ stringifyDate(new Date(data.date.seconds * 1000)) }}
-                </div>
+                <v-list-item-subtitle>
+                    {{ stringifyDateDay(getDateFromData()) }}
+                    |
+                    {{ stringifyDateTime(getDateFromData()) }}
+                </v-list-item-subtitle>
             </v-card-title>
 
             <v-card-text>
@@ -88,10 +90,20 @@ export default {
             )}`;
         },
 
-        stringifyDate: function (date) {
+        stringifyDateDay: function (date) {
             return `${date.getDate()}/${
                 date.getMonth() + 1
             }/${date.getFullYear()}`;
+        },
+
+        stringifyDateTime: function (date) {
+            return `${this.pad(date.getHours())}:${this.pad(
+                date.getMinutes()
+            )}`;
+        },
+
+        getDateFromData: function () {
+            return new Date(this.data.date.seconds * 1000);
         },
 
         getLapsData: function () {

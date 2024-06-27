@@ -1,13 +1,9 @@
 <template>
-    <v-btn
-        @click="forceRun = !forceRun"
-        :color="forceRun ? 'red' : 'green'"
-        block
-    >
-        {{ forceRun ? "Stop" : "Start" }}
+    <v-btn @click="runAll = !runAll" :color="runAll ? 'red' : 'green'" block>
+        {{ runAll ? "Stop" : "Start" }}
     </v-btn>
 
-    <div v-if="!forceRun" style="text-align: center">
+    <div v-if="!runAll" style="text-align: center">
         <v-pagination :length="8" :total-visible="8" v-model="numberOfTracks" />
 
         <v-chip
@@ -24,7 +20,7 @@
         <br />
         <br />
 
-        <v-btn variant="outlined" color="warning" @click="saveResults = true">
+        <v-btn variant="outlined" color="warning" @click="saveResultsToDB()">
             Save Results
         </v-btn>
     </div>
@@ -32,14 +28,13 @@
     <v-container>
         <v-row class="d-flex align-start justify-center">
             <v-col v-for="track in numberOfTracks" :key="track">
-                <stopwatch
-                    :forceRun="forceRun"
+                <syncronized-stopwatch
+                    :run-all="runAll"
                     :initial-track="track"
                     :distance="distance"
                     :time="time"
                     :possible-names="possibleNames"
-                    :save-results="saveResults"
-                    @stop="stoppedWatches.push(track)"
+                    @stop="(r) => stoppedWatches.push(r)"
                 />
             </v-col>
         </v-row>
@@ -47,7 +42,7 @@
 </template>
 
 <script>
-import Stopwatch from "../components/Stopwatch.vue";
+import SyncronizedStopwatch from "../components/SyncronizedStopwatch.vue";
 import { db } from "@/App.vue";
 
 const DT = 0.01;
@@ -56,7 +51,7 @@ export default {
     name: "HomeView",
 
     components: {
-        Stopwatch,
+        SyncronizedStopwatch,
     },
 
     data() {
@@ -64,13 +59,12 @@ export default {
             startTime: 0,
             time: 0,
             intervalId: null,
-            forceRun: false,
+            runAll: false,
             numberOfTracks: 6,
             distance: 25,
             possibleDistances: [25, 50],
             possibleNames: [],
             stoppedWatches: [],
-            saveResults: false,
         };
     },
 
@@ -92,10 +86,18 @@ export default {
         setDistance: function (distance) {
             this.distance = distance;
         },
+
+        saveResultsToDB: async function () {
+            this.stoppedWatches.forEach(async (r) => {
+                if (r.username) {
+                    await db.collection("data").add(r);
+                }
+            });
+        },
     },
 
     watch: {
-        forceRun: function (newVal) {
+        runAll: function (newVal) {
             if (newVal) {
                 this.startTimer();
             } else {
@@ -104,9 +106,9 @@ export default {
         },
 
         stoppedWatches: {
-            handler: function (newVal) {
+            handler: async function (newVal) {
                 if (newVal.length >= this.numberOfTracks) {
-                    this.forceRun = false;
+                    this.runAll = false;
                 }
             },
 

@@ -96,8 +96,6 @@
 </template>
 
 <script>
-import { db } from "@/App.vue";
-
 class Lap {
     constructor(distance, totalTime, deltaTime) {
         this.distance = distance;
@@ -113,12 +111,12 @@ export default {
         time: {
             type: Number,
             default: 0,
+            required: true,
         },
 
-        forceRun: {
+        runAll: {
             type: Boolean,
-            default: false,
-            required: false,
+            required: true,
         },
 
         initialTrack: {
@@ -135,11 +133,6 @@ export default {
             type: Array,
             default: () => [],
         },
-
-        saveResults: {
-            type: Boolean,
-            default: false,
-        },
     },
 
     emits: ["stop"],
@@ -147,7 +140,7 @@ export default {
     data() {
         return {
             showWatch: false,
-            isRunning: this.forceRun,
+            isRunning: this.runAll,
             openSettingsDialog: false,
             track: this.initialTrack,
             name: null,
@@ -211,15 +204,31 @@ export default {
         getLastLapsData: function (size = 3) {
             return this.getLapsData().slice(-size);
         },
+
+        exportResult: function () {
+            return {
+                track: this.track,
+                username: this.name,
+                totalTime: this.elapsedTime,
+                date: new Date(),
+                laps: this.laps.map((lap) => {
+                    return {
+                        distance: lap.distance,
+                        deltaTime: lap.deltaTime,
+                        totalTime: lap.totalTime,
+                    };
+                }),
+            };
+        },
     },
 
     watch: {
-        forceRun: function () {
-            if (this.forceRun) {
+        runAll: function () {
+            if (this.runAll) {
                 this.laps = [];
             }
 
-            this.isRunning = this.forceRun;
+            this.isRunning = this.runAll;
         },
 
         time: function () {
@@ -230,27 +239,7 @@ export default {
 
         isRunning: function () {
             if (!this.isRunning) {
-                this.$emit("stop");
-            }
-        },
-
-        saveResults: function () {
-            console.log(this.saveResults, this.name);
-
-            if (this.saveResults && this.name) {
-                db.collection("data").add({
-                    track: this.track,
-                    username: this.name,
-                    totalTime: this.elapsedTime,
-                    date: new Date(),
-                    laps: this.laps.map((lap) => {
-                        return {
-                            distance: lap.distance,
-                            deltaTime: lap.deltaTime,
-                            totalTime: lap.totalTime,
-                        };
-                    }),
-                });
+                this.$emit("stop", this.exportResult());
             }
         },
     },

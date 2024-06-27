@@ -5,7 +5,7 @@
                 <v-card-title class="d-flex justify-center">
                     <h2>Login!</h2>
                 </v-card-title>
-                
+
                 <v-card-text>
                     <v-text-field
                         clearable
@@ -80,7 +80,7 @@ export default {
 
             localStorage.setItem("user", JSON.stringify(res[0]));
 
-            this.$router.push("/");
+            this.$router.replace("/profile");
         },
     },
 
