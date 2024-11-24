@@ -2,7 +2,8 @@
     <v-expand-transition>
         <v-card
             v-show="showWatch"
-            width="270"
+            width="100%"
+            :min-width="getMinWidth()"
             class="mx-auto text-center"
             rounded="xl"
         >
@@ -124,6 +125,11 @@ export default {
             default: 0,
         },
 
+        numberOfTracks: {
+            type: Number,
+            default: 1,
+        },
+
         distance: {
             type: Number,
             default: 25,
@@ -219,6 +225,18 @@ export default {
                     };
                 }),
             };
+        },
+
+        getMinWidth: function () {
+            if (this.numberOfTracks <= 4) {
+                return 170 * 2;
+            }
+
+            if (this.numberOfTracks <= 6) {
+                return (170 * 4) / 3;
+            }
+
+            return 170;
         },
     },
 

@@ -31,6 +31,7 @@
                 <syncronized-stopwatch
                     :run-all="runAll"
                     :initial-track="track"
+                    :number-of-tracks="numberOfTracks"
                     :distance="distance"
                     :time="time"
                     :possible-names="possibleNames"
