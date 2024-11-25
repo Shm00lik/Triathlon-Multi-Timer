@@ -80,7 +80,7 @@ export default {
 
             localStorage.setItem("user", JSON.stringify(res[0]));
 
-            this.$router.replace("/profile");
+            this.$router.push("/");
         },
     },
 

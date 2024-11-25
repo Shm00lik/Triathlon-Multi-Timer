@@ -2,6 +2,21 @@
     <v-container style="text-align: center">
         <h1 class="mb-4">Hello, {{ user.username }}!</h1>
 
+        <v-btn
+            v-if="user.isAdmin"
+            @click="
+                () => {
+                    this.$router.push('/measure/syncronized');
+                }
+            "
+            color="green"
+        >
+            Measure
+        </v-btn>
+
+        <br />
+        <br />
+
         <v-skeleton-loader
             v-if="user.notLoggedIn"
             v-for="i in Math.floor(Math.random() * 4) + 1"
@@ -37,6 +52,7 @@ export default {
                 password: "",
                 email: "",
                 notLoggedIn: true,
+                isAdmin: false,
             },
             data: [],
         };

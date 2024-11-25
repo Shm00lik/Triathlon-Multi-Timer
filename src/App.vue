@@ -39,6 +39,10 @@ export default {
         setTimeout(() => {
             this.showFooter = true;
         }, 500);
+
+        if (!localStorage.getItem("user")) {
+            this.$router.push("/login");
+        }
     },
 };
 </script>

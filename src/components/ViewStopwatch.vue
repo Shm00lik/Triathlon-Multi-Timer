@@ -32,16 +32,18 @@
                     hover
                 />
 
-                <br />
+                <div v-if="data.laps.length > 0">
+                    <br />
 
-                <v-btn
-                    @click="expandLapsTable = !expandLapsTable"
-                    color="primary"
-                    block
-                    variant="outlined"
-                >
-                    {{ expandLapsTable ? "Hide" : "Show All" }}
-                </v-btn>
+                    <v-btn
+                        @click="expandLapsTable = !expandLapsTable"
+                        color="primary"
+                        block
+                        variant="outlined"
+                    >
+                        {{ expandLapsTable ? "Hide" : "Show All" }}
+                    </v-btn>
+                </div>
             </v-card-text>
         </v-card>
     </v-expand-transition>

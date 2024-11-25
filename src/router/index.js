@@ -2,26 +2,22 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import LoginView from "@/views/LoginView.vue";
-import ProfileView from "@/views/ProfileView.vue";
+import MainView from "@/views/MainView.vue";
 import SyncronizedMeasureView from "@/views/SyncronizedMeasureView.vue";
 import PersonalMeasureView from "@/views/PersonalMeasureView.vue";
 
 const routes = [
     {
-        path: "/measure/syncronized",
-        component: SyncronizedMeasureView,
+        path: "/",
+        component: MainView,
     },
-    // {
-    //     path: "/measure/personal",
-    //     component: PersonalMeasureView,
-    // },
     {
         path: "/login",
         component: LoginView,
     },
     {
-        path: "/profile",
-        component: ProfileView,
+        path: "/measure/syncronized",
+        component: SyncronizedMeasureView,
     },
 ];
 
