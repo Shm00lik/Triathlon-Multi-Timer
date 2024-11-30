@@ -19,31 +19,74 @@
 
             <v-card-text>
                 <div v-if="isRunning">
-                    <v-btn
-                        @click="toggleTimer"
-                        color="red"
-                        variant="outlined"
-                        block
-                    >
-                        STOP
-                    </v-btn>
+                    <div v-if="!isInRestLap">
+                        <v-btn
+                            @click="toggleTimer"
+                            color="red"
+                            variant="outlined"
+                            block
+                        >
+                            STOP
+                        </v-btn>
 
-                    <br />
+                        <br />
 
-                    <v-btn
-                        @click="saveLap"
-                        color="primary"
-                        block
-                        variant="outlined"
-                    >
-                        Lap
-                    </v-btn>
+                        <v-btn
+                            @click="saveLap()"
+                            color="primary"
+                            block
+                            variant="outlined"
+                        >
+                            Lap
+                        </v-btn>
 
-                    <br />
+                        <br />
+
+                        <v-btn
+                            @click="
+                                saveLap();
+                                enterRestLap();
+                            "
+                            color="green"
+                            block
+                            variant="outlined"
+                        >
+                            Rest
+                        </v-btn>
+
+                        <br />
+                    </div>
+
+                    <div v-else>
+                        <v-btn
+                            @click="saveLap()"
+                            color="green"
+                            block
+                            variant="outlined"
+                        >
+                            Finish Rest
+                        </v-btn>
+
+                        <br />
+                    </div>
                 </div>
 
                 <h1 class="text--green">
-                    {{ stringifyTime(elapsedTime) }}
+                    <div v-if="!isInRestLap">
+                        {{ stringifyTime(elapsedTime) }}
+                    </div>
+
+                    <div v-else>
+                        {{
+                            stringifyTime(
+                                this.laps.length > 0
+                                    ? this.elapsedTime -
+                                          this.laps[this.laps.length - 1]
+                                              .totalTime
+                                    : this.elapsedTime
+                            )
+                        }}
+                    </div>
                 </h1>
 
                 <v-data-table
@@ -81,7 +124,11 @@
         <v-card>
             <v-card-title>Settings</v-card-title>
             <v-card-text>
-                <v-pagination :length="8" :total-visible="8" v-model="track" />
+                <v-pagination
+                    :length="10"
+                    :total-visible="10"
+                    v-model="track"
+                />
 
                 <br />
 
@@ -98,10 +145,11 @@
 
 <script>
 class Lap {
-    constructor(distance, totalTime, deltaTime) {
-        this.distance = distance;
+    constructor(distance, totalTime, deltaTime, isRestLap = false) {
+        this.distance = isRestLap ? "Rest" : distance;
         this.totalTime = totalTime;
         this.deltaTime = deltaTime;
+        this.isRestLap = isRestLap;
     }
 }
 
@@ -158,6 +206,7 @@ export default {
                 { title: "", key: "deltaTime", align: "center" },
             ],
             expandLapsTable: false,
+            isInRestLap: false,
         };
     },
 
@@ -187,13 +236,33 @@ export default {
         saveLap: function () {
             this.laps.push(
                 new Lap(
-                    this.distance * 2 * (this.laps.length + 1),
+                    this.getNextLapDistance(),
                     this.elapsedTime,
                     this.laps.length > 0
                         ? this.elapsedTime -
                           this.laps[this.laps.length - 1].totalTime
-                        : this.elapsedTime
+                        : this.elapsedTime,
+                    this.isInRestLap
                 )
+            );
+
+            if (this.isInRestLap) {
+                this.leaveRestLap();
+            }
+        },
+
+        enterRestLap: function () {
+            this.isInRestLap = true;
+        },
+
+        leaveRestLap: function () {
+            this.isInRestLap = false;
+        },
+
+        getNextLapDistance: function () {
+            return (
+                (this.laps.filter((lap) => !lap.isRestLap).length + 1) *
+                this.distance
             );
         },
 
@@ -259,6 +328,8 @@ export default {
             if (!this.isRunning) {
                 this.$emit("stop", this.exportResult());
             }
+
+            this.isInRestLap = false;
         },
     },
 

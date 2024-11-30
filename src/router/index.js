@@ -1,10 +1,8 @@
-// Composables
 import { createRouter, createWebHistory } from "vue-router";
 
 import LoginView from "@/views/LoginView.vue";
 import MainView from "@/views/MainView.vue";
 import SyncronizedMeasureView from "@/views/SyncronizedMeasureView.vue";
-import PersonalMeasureView from "@/views/PersonalMeasureView.vue";
 
 const routes = [
     {

@@ -13,6 +13,10 @@
                     {{ stringifyDateDay(getDateFromData()) }}
                     |
                     {{ stringifyDateTime(getDateFromData()) }}
+
+                    <div v-if="data.description">
+                        {{ data.description }}
+                    </div>
                 </v-list-item-subtitle>
             </v-card-title>
 

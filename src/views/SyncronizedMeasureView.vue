@@ -4,7 +4,11 @@
     </v-btn>
 
     <div v-if="!runAll" style="text-align: center">
-        <v-pagination :length="8" :total-visible="8" v-model="numberOfTracks" />
+        <v-pagination
+            :length="10"
+            :total-visible="10"
+            v-model="numberOfTracks"
+        />
 
         <v-chip
             v-for="(d, idx) in possibleDistances"
@@ -19,6 +23,18 @@
 
         <br />
         <br />
+
+        <!-- 
+            - תיאור תרגיל, מספר חזרות כפול מרחק
+        -->
+        <v-text-field
+            v-model="description"
+            label="Description"
+            variant="outlined"
+            max-width="75%"
+            class="mx-auto"
+            dir="rtl"
+        />
 
         <v-btn variant="outlined" color="warning" @click="saveResultsToDB()">
             Save Results
@@ -64,6 +80,7 @@ export default {
             numberOfTracks: 6,
             distance: 25,
             possibleDistances: [25, 50],
+            description: null,
             possibleNames: [],
             stoppedWatches: [],
         };
@@ -91,7 +108,9 @@ export default {
         saveResultsToDB: async function () {
             this.stoppedWatches.forEach(async (r) => {
                 if (r.username) {
-                    await db.collection("data").add(r);
+                    await db
+                        .collection("data")
+                        .add({ ...r, description: this.description });
                 }
             });
         },
