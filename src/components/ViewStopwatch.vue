@@ -14,7 +14,7 @@
                     |
                     {{ stringifyDateTime(getDateFromData()) }}
 
-                    <div v-if="data.description">
+                    <div v-if="data.description" dir="auto">
                         {{ data.description }}
                     </div>
                 </v-list-item-subtitle>

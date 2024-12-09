@@ -6,12 +6,16 @@
             v-if="user.isAdmin"
             @click="
                 () => {
-                    this.$router.push('/measure/syncronized');
+                    this.$router.push('/measure');
                 }
             "
             color="green"
         >
             Measure
+        </v-btn>
+
+        <v-btn v-if="user.isAdmin" @click="createUsers()" color="red">
+            Create Users
         </v-btn>
 
         <br />
@@ -64,6 +68,53 @@ export default {
                 .collection("data")
                 .where("username", "==", this.user.username)
                 .get();
+        },
+
+        createUsers: async function () {
+            const names = [
+                "אלעד בוכניק",
+                "ארז בן נח",
+                "ארז ברקאי",
+                "אריאל מזור",
+                "גדי ברקאי",
+                "יורם אביגד",
+                "יעל דקל",
+                "מיקי כהן",
+                "נדב קירש",
+                "עדי מרטינז",
+                "עדי קסלר",
+                "עומרי קסלר",
+                "עמיר כהן",
+                "ערן אברון",
+                "פטררו",
+                "קרן ברנדס",
+                "איה",
+                "תומר שפרן",
+                "גלעד ברנדס",
+                "עטרת",
+                "ליהי מזרחי",
+                "ספיר לוין",
+                "מוטי",
+                "מושון",
+                "שושי כהן",
+                "ליאור",
+                "אלה",
+                "מנצור",
+                "ניב",
+                "עומרי  ",
+                "לירן",
+                "קטרין",
+                "עופר",
+                "אביב",
+            ];
+
+            for (let i = 0; i < names.length; i++) {
+                await db.collection("users").add({
+                    username: names[i],
+                    password: "123456",
+                    isAdmin: false,
+                });
+            }
         },
     },
 

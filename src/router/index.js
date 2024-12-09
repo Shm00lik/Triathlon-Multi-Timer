@@ -14,7 +14,7 @@ const routes = [
         component: LoginView,
     },
     {
-        path: "/measure/syncronized",
+        path: "/measure",
         component: SyncronizedMeasureView,
     },
 ];

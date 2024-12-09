@@ -298,14 +298,10 @@ export default {
 
         getMinWidth: function () {
             if (this.numberOfTracks <= 4) {
-                return 170 * 2;
+                return 680 / 2; // 2 per row
             }
 
-            if (this.numberOfTracks <= 6) {
-                return (170 * 4) / 3;
-            }
-
-            return 170;
+            return 680 / 3; // 3 per row
         },
     },
 

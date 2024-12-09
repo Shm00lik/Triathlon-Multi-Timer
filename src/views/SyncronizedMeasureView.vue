@@ -33,12 +33,19 @@
             variant="outlined"
             max-width="75%"
             class="mx-auto"
-            dir="rtl"
+            dir="auto"
         />
 
         <v-btn variant="outlined" color="warning" @click="saveResultsToDB()">
             Save Results
         </v-btn>
+
+        <div v-if="resultsSaved">
+            <br />
+            <v-icon color="green" size="x-large">
+                mdi-check-circle-outline
+            </v-icon>
+        </div>
     </div>
 
     <v-container>
@@ -83,6 +90,7 @@ export default {
             description: null,
             possibleNames: [],
             stoppedWatches: [],
+            resultsSaved: false,
         };
     },
 
@@ -113,6 +121,8 @@ export default {
                         .add({ ...r, description: this.description });
                 }
             });
+
+            this.resultsSaved = true;
         },
     },
 
@@ -130,6 +140,8 @@ export default {
                 if (newVal.length >= this.numberOfTracks) {
                     this.runAll = false;
                 }
+
+                this.resultsSaved = false;
             },
 
             deep: true,
