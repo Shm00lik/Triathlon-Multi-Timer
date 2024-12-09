@@ -53,7 +53,7 @@ export default {
     data() {
         return {
             show: false,
-            username: "יואב",
+            username: "",
             password: "123456",
             failedSnackbar: false,
             loading: false,
