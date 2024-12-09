@@ -46,6 +46,17 @@
                 mdi-check-circle-outline
             </v-icon>
         </div>
+
+        <br />
+        <br />
+
+        <v-btn
+            variant="outlined"
+            color="red"
+            @click="this.$router.replace('/')"
+        >
+            Home Screen
+        </v-btn>
     </div>
 
     <v-container>

@@ -73,7 +73,7 @@
 
                 <h1 class="text--green">
                     <div v-if="!isInRestLap">
-                        {{ stringifyTime(elapsedTime) }}
+                        {{ stringifyTime(getTimeSinceLastRest) }}
                     </div>
 
                     <div v-else>
@@ -260,10 +260,17 @@ export default {
         },
 
         getNextLapDistance: function () {
-            return (
-                (this.laps.filter((lap) => !lap.isRestLap).length + 1) *
-                this.distance
-            );
+            if (this.laps.length === 0) {
+                return this.distance;
+            }
+
+            const lastLap = this.laps[this.laps.length - 1];
+
+            if (lastLap.isRestLap) {
+                return this.distance;
+            }
+
+            return lastLap.distance + this.distance;
         },
 
         getLapsData: function () {
@@ -326,6 +333,26 @@ export default {
             }
 
             this.isInRestLap = false;
+        },
+    },
+
+    computed: {
+        getTimeSinceLastRest: function () {
+            console.log("called");
+            if (this.laps.length === 0) {
+                return this.elapsedTime;
+            }
+
+            const lastRestLap = this.laps
+                .slice()
+                .reverse()
+                .find((lap) => lap.isRestLap);
+
+            if (!lastRestLap) {
+                return this.elapsedTime;
+            }
+
+            return this.elapsedTime - lastRestLap.totalTime;
         },
     },
 
